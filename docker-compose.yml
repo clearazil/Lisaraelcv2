@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+
+  node:
+    build:
+      args:
+        user: nodeuser
+        uid: 1001
+      context: ./.docker/node
+    volumes:
+      - ./:/application
+    ports:
+      - 1235:1235
+      - 9228:9228
+    container_name: lisaraelcv2-node
+    tty: true
