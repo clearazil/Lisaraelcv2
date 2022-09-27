@@ -12,9 +12,10 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user && \
     chown -R $user:$user /home/$user
 
+RUN npm install jest-cli -g
+
 RUN mkdir /application
 WORKDIR /application
-# RUN npm install
 USER $user
 
 EXPOSE 1235
