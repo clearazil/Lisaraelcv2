@@ -24,6 +24,3 @@ USER $user
 
 EXPOSE 1235
 EXPOSE 9228
-
-
-
