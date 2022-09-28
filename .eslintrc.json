@@ -9,16 +9,22 @@
             "extends": [
                 "xo-typescript"
             ],
+            "parserOptions": {
+                "project": ["./tsconfig.eslint.json"]
+            },
             "files": [
                 "*.ts",
                 "*.tsx"
             ],
             "rules": {
-                "@typescript-eslint/parameter-properties": "off"
+                "@typescript-eslint/parameter-properties": "off",
+                "@typescript-eslint/indent": "off",
+                "indent": ["error", 4]
             }
         }
     ],
     "parserOptions": {
+        "project": ["./tsconfig.eslint.json"],
         "ecmaVersion": "latest",
         "sourceType": "module"
     },

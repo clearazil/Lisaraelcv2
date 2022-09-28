@@ -5,14 +5,14 @@ import config from '@config/config';
  *
  */
 export default class Discord {
-	private readonly client: Client;
+    private readonly client: Client;
 
-	constructor(client: Client) {
-		this.client = client;
-	}
+    constructor(client: Client) {
+        this.client = client;
+    }
 
-	public async login() {
-		await this.client.login(config.discord.token);
-	}
+    public async login() {
+        await this.client.login(config.discord.token);
+    }
 }
 
