@@ -5,3 +5,4 @@ database.sqlite
 
 #directories
 node_modules/
+compiled/

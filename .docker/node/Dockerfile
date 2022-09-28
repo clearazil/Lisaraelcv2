@@ -12,11 +12,18 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user && \
     chown -R $user:$user /home/$user
 
+RUN npm install -g npm@8.19.2
 RUN npm install jest-cli -g
+RUN npm install typescript -g
+RUN npm install ts-node -g
 
 RUN mkdir /application
 WORKDIR /application
+
 USER $user
 
 EXPOSE 1235
 EXPOSE 9228
+
+
+
