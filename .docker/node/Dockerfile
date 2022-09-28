@@ -15,7 +15,6 @@ RUN mkdir -p /home/$user && \
 RUN npm install -g npm@8.19.2
 RUN npm install jest-cli -g
 RUN npm install typescript -g
-RUN npm install ts-node -g
 
 RUN mkdir /application
 WORKDIR /application

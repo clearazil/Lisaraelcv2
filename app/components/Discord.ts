@@ -14,5 +14,9 @@ export default class Discord {
     public async login() {
         await this.client.login(config.discord.token);
     }
+
+    public testFunction() {
+        return 'This is a test function';
+    }
 }
 
