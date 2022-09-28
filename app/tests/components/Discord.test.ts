@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import Discord from '@components/Discord';
 import {jest, test, expect} from '@jest/globals';
 import {Client} from 'discord.js';
