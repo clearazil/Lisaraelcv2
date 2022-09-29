@@ -1,6 +1,6 @@
 import type {Client} from 'discord.js';
 import {REST, Routes} from 'discord.js';
-import config from '@config/config';
+import config from '@config/general';
 import type commands from '@config/commands';
 import CommandBuilder from './CommandBuilder';
 
