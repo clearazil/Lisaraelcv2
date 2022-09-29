@@ -1,5 +1,5 @@
 import commands from '@config/commands';
-import {jest, test, expect} from '@jest/globals';
+import {test, expect} from '@jest/globals';
 
 test('All the required properties in commands config exists', () => {
     commands.forEach(command => {
