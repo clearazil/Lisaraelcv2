@@ -4,7 +4,7 @@ dotenv.config();
 
 export default {
     discord: {
-        token: process.env.DISCORD_TOKEN,
-        appId: process.env.DISCORD_APPLICATION_ID,
+        token: String(process.env.DISCORD_TOKEN),
+        appId: String(process.env.DISCORD_APPLICATION_ID),
     },
 };
