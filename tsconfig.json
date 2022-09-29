@@ -3,7 +3,7 @@
     "target": "es2022",
     "experimentalDecorators": true,
     "module": "CommonJS",
-    "rootDir": "./app/",
+    "rootDir": "./",
     "moduleResolution": "node",
     "baseUrl": "./",
      "paths": {
@@ -32,7 +32,5 @@
   ],
   "exclude": [
     "node_modules",
-    "tests",
-    "jest.config.ts"
   ]
 }

@@ -9,11 +9,11 @@
   "scripts": {
     "test": "jest",
     "bot": "ts-node app/index.ts",
-    "compile": "tsc"
+    "compile": "tsc --project tsconfig.build.json"
   },
   "_moduleAliases": {
-    "@components": "compiled/components",
-    "@config": "compiled/config"
+    "@components": "compiled/app/components",
+    "@config": "compiled/app/config"
   },
   "devDependencies": {
     "@types/jest": "^29.0.3",
