@@ -4,6 +4,8 @@
         "app",
         "tests",
         "jest.config.ts",
+        "migrator.ts",
+        "migrations",
     ],
     "exclude": []
 }
