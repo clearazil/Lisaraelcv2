@@ -1,8 +1,10 @@
+import 'module-alias/register';
 import {Sequelize} from 'sequelize';
 import type {QueryInterface} from 'sequelize';
 import {Umzug, SequelizeStorage} from 'umzug';
+import database from '@config/database';
 
-const sequelize: Sequelize = new Sequelize({dialect: 'sqlite', storage: './database.sqlite'});
+const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
 type Migration = {
     up: (queryInterface: QueryInterface) => Promise<void>;
