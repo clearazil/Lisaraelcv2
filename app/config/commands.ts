@@ -9,6 +9,7 @@ export default [
         requiredPermissions: null,
         ephemeral: false,
         arguments: [],
+        classType: 'SettingCommand',
     },
     {
         name: 'game-settings',
@@ -16,6 +17,7 @@ export default [
         requiredPermissions: null,
         ephemeral: false,
         arguments: [],
+        classType: 'SettingCommand',
     },
     {
         name: 'time-zone',
@@ -30,6 +32,7 @@ export default [
                 type: 'String',
             },
         ],
+        classType: 'SettingCommand',
     },
     // Setup
     {
@@ -38,6 +41,7 @@ export default [
         requiredPermissions: PermissionFlagsBits.Administrator,
         ephemeral: false,
         arguments: [],
+        classType: 'SetupCommand',
     },
     {
         name: 'setup-playing-channel',
@@ -52,6 +56,7 @@ export default [
                 type: 'Channel',
             },
         ],
+        classType: 'SetupCommand',
     },
     // Games
     {
@@ -67,6 +72,7 @@ export default [
                 type: 'String',
             },
         ],
+        classType: 'GameCommand',
     },
     {
         name: 'remove-game',
@@ -81,6 +87,7 @@ export default [
                 type: 'String',
             },
         ],
+        classType: 'GameCommand',
     },
     {
         name: 'add-alias',
@@ -101,6 +108,7 @@ export default [
                 type: 'String',
             },
         ],
+        classType: 'GameCommand',
     },
     {
         name: 'remove-alias',
@@ -115,6 +123,7 @@ export default [
                 type: 'String',
             },
         ],
+        classType: 'GameCommand',
     },
     {
         name: 'aliases',
@@ -129,6 +138,7 @@ export default [
                 type: 'String',
             },
         ],
+        classType: 'GameCommand',
     },
     {
         name: 'purge-roles',
@@ -143,5 +153,6 @@ export default [
                 type: 'String',
             },
         ],
+        classType: 'GameCommand',
     },
 ];

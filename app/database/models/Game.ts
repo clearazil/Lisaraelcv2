@@ -1,8 +1,5 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
-import GameAlias from './GameAlias';
-import UserGameSetting from './UserGameSetting';
-import Guild from './Guild';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
@@ -23,9 +20,5 @@ Game.init({
     sequelize,
     modelName: 'Game',
 });
-
-Game.hasMany(GameAlias, {onDelete: 'CASCADE'});
-Game.hasMany(UserGameSetting, {onDelete: 'CASCADE'});
-Game.belongsTo(Guild);
 
 export default Game;

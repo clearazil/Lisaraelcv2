@@ -1,13 +1,28 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
-import User from './User';
-import BotMessages from './BotMessages';
-import Game from './Game';
-import PlayTime from './PlayTime';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
-class Guild extends Model {}
+class Guild extends Model {
+    public static async createIfNotExists(discordId: string, name: string) {
+        let guild = await Guild.findOne({
+            where: {
+                discordGuildId: discordId,
+            },
+        });
+
+        if (guild === null) {
+            guild = await Guild.create({
+                discordGuildId: discordId,
+                name,
+            });
+        }
+
+        return guild;
+    }
+
+    declare id: number;
+}
 
 Guild.init({
     discordGuildId: DataTypes.STRING,
@@ -21,10 +36,5 @@ Guild.init({
     sequelize,
     modelName: 'Guild',
 });
-
-Guild.hasMany(User);
-Guild.hasMany(BotMessages);
-Guild.hasMany(Game);
-Guild.hasMany(PlayTime);
 
 export default Guild;

@@ -1,6 +1,5 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
-import Guild from './Guild';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
@@ -14,7 +13,5 @@ BotMessages.init({
     sequelize,
     modelName: 'BotMessages',
 });
-
-BotMessages.belongsTo(Guild);
 
 export default BotMessages;

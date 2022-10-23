@@ -1,13 +1,14 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
-import PlayTime from './PlayTime';
-import UserGameSetting from './UserGameSetting';
-import UserSetting from './UserSetting';
-import Guild from './Guild';
+import type UserSetting from './UserSetting';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
-class User extends Model {}
+class User extends Model {
+    declare id: number;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    declare UserSetting: UserSetting;
+}
 
 User.init({
     guildId: DataTypes.INTEGER,
@@ -17,10 +18,5 @@ User.init({
     sequelize,
     modelName: 'User',
 });
-
-User.belongsToMany(PlayTime, {through: 'PlayTimeUsers'});
-User.hasMany(UserGameSetting);
-User.hasOne(UserSetting);
-User.belongsTo(Guild);
 
 export default User;

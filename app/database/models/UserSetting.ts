@@ -1,10 +1,13 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
-import User from './User';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
-class UserSetting extends Model {}
+class UserSetting extends Model {
+    declare timeZone: string;
+    declare timeZoneDifference: string;
+    declare timeZoneOffset: string;
+}
 
 UserSetting.init({
     userId: DataTypes.STRING,
@@ -16,7 +19,5 @@ UserSetting.init({
     sequelize,
     modelName: 'UserSetting',
 });
-
-UserSetting.belongsTo(User);
 
 export default UserSetting;

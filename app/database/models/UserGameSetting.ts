@@ -1,7 +1,5 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
-import User from './User';
-import Game from './Game';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
@@ -15,8 +13,5 @@ UserGameSetting.init({
     sequelize,
     modelName: 'UserGameSetting',
 });
-
-UserGameSetting.belongsTo(User);
-UserGameSetting.belongsTo(Game);
 
 export default UserGameSetting;

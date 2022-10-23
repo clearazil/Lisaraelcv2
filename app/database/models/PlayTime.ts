@@ -1,7 +1,5 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
-import User from './User';
-import Guild from './Guild';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
@@ -17,8 +15,5 @@ PlayTime.init({
     sequelize,
     modelName: 'PlayTime',
 });
-
-PlayTime.belongsToMany(User, {through: 'PlayTimeUser'});
-PlayTime.belongsTo(Guild);
 
 export default PlayTime;
