@@ -1,4 +1,4 @@
-import type {ChatInputCommandInteraction, CommandInteraction} from 'discord.js';
+import type {ChatInputCommandInteraction} from 'discord.js';
 import type CommandInterface from './interfaces/CommandInterface';
 import GameCommand from './commands/GameCommand';
 import SettingCommand from './commands/SettingCommand';
@@ -10,7 +10,6 @@ export default class CommandFactory {
         for (const command of commands) {
             if (command.name === interaction.commandName) {
                 if (command.classType === 'SettingCommand') {
-                    console.log('here');
                     return new SettingCommand(interaction, command);
                 }
 
