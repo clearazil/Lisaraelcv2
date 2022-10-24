@@ -8,7 +8,7 @@
   "main": "app/index.ts",
   "scripts": {
     "test": "jest",
-    "bot": "ts-node app/index.ts",
+    "bot": "npm run compile && ts-node app/index.ts",
     "migrator create": "ts-node migrator.ts create --prefix NONE --name $(date +%Y%m%d%H%M%S)-$npm_config_name",
     "migrator": "ts-node migrator.ts",
     "compile": "tsc --project tsconfig.build.json"
