@@ -9,7 +9,7 @@
      "paths": {
       "@components/*": ["app/components/*"],
       "@config/*": ["app/config/*"],
-      "@database/*": ["app/database/*"],
+      "@database/*": ["app/database/*"]
      },
     "typeRoots": [
       "node_modules/@types"
@@ -32,6 +32,6 @@
     "./**/*.ts"
   ],
   "exclude": [
-    "node_modules",
+    "node_modules"
   ]
 }

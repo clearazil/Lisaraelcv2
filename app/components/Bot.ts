@@ -62,9 +62,5 @@ export default class Bot {
             command.run();
         });
     }
-
-    public testFunction() {
-        return 'This is a test function';
-    }
 }
 
