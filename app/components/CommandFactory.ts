@@ -4,22 +4,31 @@ import GameCommand from './commands/GameCommand';
 import SettingCommand from './commands/SettingCommand';
 import SetupCommand from './commands/SetupCommand';
 import commands from '@config/commands';
+import type Command from './types/Command';
+
+// Interface which tells the common constructor
+type CommandInterfaceConstructor = new (interaction: ChatInputCommandInteraction, command: Command) => CommandInterface;
+
+const defaultCommandMapping = new Map<string, CommandInterfaceConstructor>([
+    ['SettingCommand', SettingCommand],
+    ['GameCommand', GameCommand],
+    ['SetupCommand', SetupCommand],
+]);
 
 export default class CommandFactory {
+    constructor(
+        readonly commandMap = defaultCommandMapping,
+        readonly commandsConfig = commands,
+    ) {}
+
     public getCommand(interaction: ChatInputCommandInteraction): CommandInterface {
-        for (const command of commands) {
-            if (command.name === interaction.commandName) {
-                if (command.classType === 'SettingCommand') {
-                    return new SettingCommand(interaction, command);
-                }
+        const commandConfig = this.commandsConfig.find(command => command.name === interaction.commandName);
 
-                if (command.classType === 'GameCommand') {
-                    return new GameCommand(interaction, command);
-                }
+        if (commandConfig) {
+            const constructor = this.commandMap.get(commandConfig.classType);
 
-                if (command.classType === 'SetupCommand') {
-                    return new SetupCommand(interaction, command);
-                }
+            if (constructor) {
+                return new constructor(interaction, commandConfig);
             }
         }
 

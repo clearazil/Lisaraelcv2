@@ -6,7 +6,7 @@ export default [
     {
         name: 'settings',
         description: 'Show your personal settings.',
-        requiredPermissions: null,
+        requiredPermissions: undefined,
         ephemeral: false,
         arguments: [],
         classType: 'SettingCommand',
@@ -14,7 +14,7 @@ export default [
     {
         name: 'game-settings',
         description: 'Shows the games you are (or are not) subscribed to.',
-        requiredPermissions: null,
+        requiredPermissions: undefined,
         ephemeral: false,
         arguments: [],
         classType: 'SettingCommand',
@@ -22,7 +22,7 @@ export default [
     {
         name: 'time-zone',
         description: 'Set your time zone.',
-        requiredPermissions: null,
+        requiredPermissions: undefined,
         ephemeral: false,
         arguments: [
             {
@@ -128,7 +128,7 @@ export default [
     {
         name: 'aliases',
         description: 'View all aliases belonging to a game.',
-        requiredPermissions: null,
+        requiredPermissions: undefined,
         ephemeral: false,
         arguments: [
             {
