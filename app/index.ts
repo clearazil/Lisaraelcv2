@@ -7,7 +7,11 @@ import associate from '@database/associate';
 associate();
 
 const client: Client = new Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions],
+    intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.GuildMessageReactions,
+    ],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
 
@@ -20,8 +24,8 @@ async function main(): Promise<void> {
     await bot.saveGuilds();
     console.log('registering commands...');
     await bot.registerCommands(commands);
-    console.log('listening for commands...');
-    bot.respondToCommands();
+    console.log('responding to interactions...');
+    bot.respondToInteractions();
 }
 
 void main();

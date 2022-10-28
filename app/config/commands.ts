@@ -60,6 +60,21 @@ export default [
     },
     // Games
     {
+        name: 'games',
+        description: 'Look up and subscribe to games.',
+        requiredPermissions: undefined,
+        ephemeral: true,
+        arguments: [
+            {
+                name: 'search',
+                description: 'Search for a game.',
+                required: false,
+                type: 'String',
+            },
+        ],
+        classType: 'GameCommand',
+    },
+    {
         name: 'add-game',
         description: 'Add a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,

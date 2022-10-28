@@ -16,8 +16,8 @@ function associate() {
     GameAlias.belongsTo(Game, {foreignKey: 'gameId', onDelete: 'cascade', hooks: true});
     Game.hasMany(GameAlias, {onDelete: 'CASCADE'});
 
-    UserGameSetting.belongsTo(Game);
     Game.hasMany(UserGameSetting, {onDelete: 'CASCADE'});
+    UserGameSetting.belongsTo(Game);
 
     User.belongsTo(Guild);
     Guild.hasMany(User);

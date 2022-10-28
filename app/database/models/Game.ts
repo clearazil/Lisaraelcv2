@@ -1,10 +1,18 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
+import type UserGameSetting from './UserGameSetting';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
 class Game extends Model {
-    discordRoleId = '';
+    declare id: number;
+    declare name: string;
+    declare discordRoleId: string;
+    declare discordMessageId: string;
+    declare lastUsed: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    declare UserGameSettings: UserGameSetting[];
+
     mention(): string {
         return `<@&${this.discordRoleId}>`;
     }
