@@ -4,11 +4,19 @@ import type CommandInterface from '../interfaces/CommandInterface';
 import TimeZoneSetter from './time-zone/TimeZoneSetter';
 import Guild from '@database/models/Guild';
 import UserSetting from '@database/models/UserSetting';
+import PlayTime from '@database/models/PlayTime';
+import UserGameSetting from '@database/models/UserGameSetting';
+import Helper from '@components/Helper';
 
 export default class SettingCommand extends Command implements CommandInterface {
     public run() {
         if (this.interaction.commandName === null) {
             return;
+        }
+
+        if (this.interaction.commandName === 'settings') {
+            console.log('Running settings command...');
+            void this.settings();
         }
 
         if (this.interaction.commandName === 'notify-for-all-games') {
@@ -30,6 +38,64 @@ export default class SettingCommand extends Command implements CommandInterface 
 
     public hasPermissions() {
         return true;
+    }
+
+    public async settings() {
+        const guild = await Guild.findOne({
+            where: {
+                discordGuildId: this.interaction.guildId,
+            },
+        });
+
+        if (guild === null) {
+            return;
+        }
+
+        const user = await guild.getGuildUser(
+            this.interaction.user.id,
+            this.interaction.user.username,
+            [UserSetting, PlayTime, UserGameSetting],
+        );
+
+        let messageReply = '**Time zone:**\n';
+        let timeZoneMessage = 'You do not have a time zone set. Using the default time zone (CET).\n';
+
+        if (user.UserSetting?.timeZone !== null) {
+            const difference = user.UserSetting.timeZoneDifference ?? '';
+            const offset = user.UserSetting.timeZoneOffset ?? '';
+            timeZoneMessage = `Your time zone is set as ${user.UserSetting.timeZone}${difference}${offset}.\n`;
+
+            const dateTime = Helper.dateTimeFromTimeZone(
+                user.UserSetting.timeZone,
+                user.UserSetting.timeZoneDifference,
+                user.UserSetting.timeZoneOffset);
+
+            timeZoneMessage += `Your local time is: ${dateTime.toLocaleString(DateTime.TIME_24_SIMPLE)}\n`;
+        }
+
+        messageReply += timeZoneMessage;
+
+        messageReply += '\n**Notify for all games:**\n';
+        let notifyAllGamesMessage = 'No\n';
+
+        if (user.UserSetting?.notifyAllGames) {
+            notifyAllGamesMessage = 'Yes\n';
+        }
+
+        messageReply += notifyAllGamesMessage;
+
+        messageReply += '\n**Availability times:**\n';
+        let playTimesMessage = 'You do not have any times set.\n';
+        if (user.PlayTimes !== undefined && user.PlayTimes.length > 0) {
+            playTimesMessage = '';
+            for (const playTime of user.PlayTimes) {
+                playTimesMessage += `${playTime.timeStart} - ${playTime.timeEnd}\n`;
+            }
+        }
+
+        messageReply += playTimesMessage;
+
+        await this.interaction.reply({content: messageReply, ephemeral: this.command.ephemeral});
     }
 
     public async notifyForAllGames() {

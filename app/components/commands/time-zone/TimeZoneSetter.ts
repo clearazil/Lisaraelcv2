@@ -56,7 +56,7 @@ export default class TimeZoneSetter {
         timeZone = timeZone.replace(' ', '_');
 
         let timeZoneDifference = '';
-        let timeZoneOffset = '';
+        let timeZoneOffset: number | undefined;
 
         const regExp = new RegExp(/([a-z/_]*-?(?=[a-z])[a-z]*)([/+-])?(\d{1,2})?/, 'i');
         const found = regExp.exec(timeZone);
@@ -69,7 +69,7 @@ export default class TimeZoneSetter {
 
             if (found[3] !== undefined && found[3].length > 0) {
                 timeZoneDifference = found[2];
-                timeZoneOffset = found[3];
+                timeZoneOffset = Number(found[3]);
             }
         }
 

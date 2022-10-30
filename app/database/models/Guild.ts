@@ -27,7 +27,7 @@ class Guild extends Model {
 
     declare id: number;
 
-    public async getGuildUser(discordUserId: string, name: string, include: Includeable | undefined = undefined): Promise<User> {
+    public async getGuildUser(discordUserId: string, name: string, include: Includeable | Includeable[] | undefined = undefined): Promise<User> {
         const [user] = await User.findOrCreate({
             where: {
                 discordUserId,

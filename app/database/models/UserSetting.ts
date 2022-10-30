@@ -8,7 +8,7 @@ class UserSetting extends Model {
     declare userId: number;
     declare timeZone: string;
     declare timeZoneDifference: string;
-    declare timeZoneOffset: string;
+    declare timeZoneOffset: number | undefined;
     declare notifyAllGames: boolean;
 }
 

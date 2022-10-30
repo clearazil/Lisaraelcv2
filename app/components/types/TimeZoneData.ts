@@ -4,6 +4,6 @@ type TimeZoneData = {
     dateTime: DateTime;
     timeZone: string;
     timeZoneDifference: string;
-    timeZoneOffset: string;
+    timeZoneOffset: number | undefined;
 };
 export default TimeZoneData;

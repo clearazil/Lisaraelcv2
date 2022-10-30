@@ -31,8 +31,8 @@ function associate() {
     PlayTime.belongsTo(Guild);
     Guild.hasMany(PlayTime);
 
-    PlayTime.belongsToMany(User, {through: 'PlayTimeUser'});
-    User.belongsToMany(PlayTime, {through: 'PlayTimeUser'});
+    PlayTime.belongsToMany(User, {through: 'PlayTimeUsers'});
+    User.belongsToMany(PlayTime, {through: 'PlayTimeUsers'});
 
     UserGameSetting.belongsTo(User);
     User.hasMany(UserGameSetting);

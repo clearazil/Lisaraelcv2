@@ -4,7 +4,7 @@ import {DateTime} from 'luxon';
  *
  */
 class Helper {
-    dateTimeFromTimeZone(timeZone: string, difference: string, offset: number): DateTime {
+    dateTimeFromTimeZone(timeZone: string, difference: string, offset: number | undefined): DateTime {
         let dateTime = DateTime.local().setZone(timeZone);
 
         if (offset !== undefined) {
