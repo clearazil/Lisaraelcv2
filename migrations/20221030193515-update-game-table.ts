@@ -1,13 +1,11 @@
 import type {QueryInterface} from 'sequelize';
 import Sequelize from 'sequelize';
 
+// Using raw query because sequelize drops table using queryInterface.dropColumn method
 export async function up(queryInterface: QueryInterface) {
-    await queryInterface.removeColumn('Games', 'discordMessageId');
+    await queryInterface.sequelize.query('ALTER TABLE Games DROP COLUMN discordMessageId');
 }
 
 export async function down(queryInterface: QueryInterface) {
-    await queryInterface.addColumn('Games', 'discordMessageId', {
-        type: Sequelize.STRING,
-        allowNull: true,
-    });
+    await queryInterface.sequelize.query('ALTER TABLE Games ADD COLUMN discordMessageId VARCHAR(255)');
 }
