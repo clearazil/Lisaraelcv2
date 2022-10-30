@@ -8,7 +8,6 @@ class Game extends Model {
     declare id: number;
     declare name: string;
     declare discordRoleId: string;
-    declare discordMessageId: string;
     declare lastUsed: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     declare UserGameSettings: UserGameSetting[];
@@ -22,7 +21,6 @@ Game.init({
     guildId: DataTypes.INTEGER,
     name: DataTypes.STRING,
     discordRoleId: DataTypes.STRING,
-    discordMessageId: DataTypes.STRING,
     lastUsed: DataTypes.DATE,
 }, {
     sequelize,

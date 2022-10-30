@@ -4,9 +4,18 @@ import {EmbedBuilder} from 'discord.js';
 import Guild from '@database/models/Guild';
 import PaginatedGamesList from '@components/PaginatedGamesList';
 import UserGameSetting from '@database/models/UserGameSetting';
+import Game from '@database/models/Game';
 
 export default class GameCommand extends Command implements CommandInterface {
     public run() {
+        if (this.interaction.commandName === 'add-game') {
+            console.log('Running add-game command...');
+
+            const game = this.interaction.options.getString('game') ?? '';
+
+            void this.addGame(game);
+        }
+
         if (this.interaction.commandName === 'games') {
             console.log('Running games command...');
 
@@ -18,6 +27,45 @@ export default class GameCommand extends Command implements CommandInterface {
 
     public hasPermissions() {
         return true;
+    }
+
+    public async addGame(game: string) {
+        const guild = await Guild.findOne({
+            where: {
+                discordGuildId: this.interaction.guildId,
+            },
+        });
+
+        if (guild === null) {
+            return;
+        }
+
+        const exists = await Game.findOne({
+            where: {
+                guildId: guild.id,
+                name: game,
+            },
+        }) !== null;
+
+        if (exists) {
+            await this.interaction.reply({
+                content: `${game} has already been added.`,
+                ephemeral: this.command.ephemeral,
+            });
+
+            return;
+        }
+
+        await Game.create({
+            guildId: guild.id,
+            name: game,
+            discordRoleId: null,
+        });
+
+        await this.interaction.reply({
+            content: `${game} has been added.`,
+            ephemeral: this.command.ephemeral,
+        });
     }
 
     public async listGames(search: string | undefined) {
