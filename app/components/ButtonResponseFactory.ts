@@ -1,8 +1,4 @@
-import type {ChatInputCommandInteraction} from 'discord.js';
-import type CommandInterface from './interfaces/CommandInterface';
 import type {MessageComponentInteraction} from 'discord.js';
-import commands from '@config/commands';
-import type Command from './types/Command';
 import GameResponse from './button-responses/GameResponse';
 import type ButtonResponseInterface from './interfaces/ButtonResponseInterface';
 import type ButtonData from './types/ButtonData';
