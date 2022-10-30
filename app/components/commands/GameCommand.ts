@@ -95,11 +95,17 @@ export default class GameCommand extends Command implements CommandInterface {
 
         if (pageData.games.length < 1) {
             if (search !== undefined) {
-                await this.interaction.reply({content: `Your search for "${search}" did not return any results.`});
+                await this.interaction.reply({
+                    content: `Your search for "${search}" did not return any results.`,
+                    ephemeral: this.command.ephemeral,
+                });
                 return;
             }
 
-            await this.interaction.reply({content: 'This server doesn\'t have any games! Ask a moderator to add some.'});
+            await this.interaction.reply({
+                content: 'This server doesn\'t have any games! Ask a moderator to add some.',
+                ephemeral: this.command.ephemeral,
+            });
             return;
         }
 
@@ -114,6 +120,11 @@ export default class GameCommand extends Command implements CommandInterface {
                 .setDescription(description),
         ];
 
-        await this.interaction.reply({content: 'Choose games to subscribe to:', embeds, components: rows});
+        await this.interaction.reply({
+            content: 'Choose games to subscribe to:',
+            embeds,
+            components: rows,
+            ephemeral: this.command.ephemeral,
+        });
     }
 }
