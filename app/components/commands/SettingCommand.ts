@@ -2,11 +2,18 @@ import Command from '@components/Command';
 import {DateTime} from 'luxon';
 import type CommandInterface from '../interfaces/CommandInterface';
 import TimeZoneSetter from './time-zone/TimeZoneSetter';
+import Guild from '@database/models/Guild';
+import UserSetting from '@database/models/UserSetting';
 
 export default class SettingCommand extends Command implements CommandInterface {
     public run() {
         if (this.interaction.commandName === null) {
             return;
+        }
+
+        if (this.interaction.commandName === 'notify-for-all-games') {
+            console.log('Running notify-for-all-games command...');
+            void this.notifyForAllGames();
         }
 
         if (this.interaction.commandName === 'time-zone') {
@@ -23,6 +30,44 @@ export default class SettingCommand extends Command implements CommandInterface 
 
     public hasPermissions() {
         return true;
+    }
+
+    public async notifyForAllGames() {
+        const guild = await Guild.findOne({
+            where: {
+                discordGuildId: this.interaction.guildId,
+            },
+        });
+
+        if (guild === null) {
+            return;
+        }
+
+        const user = await guild.getGuildUser(
+            this.interaction.user.id,
+            this.interaction.user.username,
+            UserSetting,
+        );
+
+        let response = 'Notifications for all games have been turned on. Use /ignore-games to set exceptions.';
+
+        if (user.UserSetting === null) {
+            await UserSetting.create({
+                userId: user.id,
+                notifyAllGames: true,
+            });
+        } else {
+            if (user.UserSetting.notifyAllGames) {
+                user.UserSetting.notifyAllGames = false;
+                response = 'Notifications for all games have been turned off. Use /games to set notifications for specific games.';
+            } else {
+                user.UserSetting.notifyAllGames = true;
+            }
+
+            await user.UserSetting.save();
+        }
+
+        await this.interaction.reply({content: response, ephemeral: this.command.ephemeral});
     }
 
     public async setUserTimeZone(timeZone: string) {

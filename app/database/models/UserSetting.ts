@@ -4,9 +4,12 @@ import database from '@config/database';
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
 class UserSetting extends Model {
+    declare id: number;
+    declare userId: number;
     declare timeZone: string;
     declare timeZoneDifference: string;
     declare timeZoneOffset: string;
+    declare notifyAllGames: boolean;
 }
 
 UserSetting.init({

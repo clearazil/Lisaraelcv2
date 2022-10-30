@@ -20,6 +20,14 @@ export default [
         classType: 'SettingCommand',
     },
     {
+        name: 'notify-for-all-games',
+        description: 'Toggle notifications for all games on/off.',
+        requiredPermissions: undefined,
+        ephemeral: false,
+        arguments: [],
+        classType: 'SettingCommand',
+    },
+    {
         name: 'time-zone',
         description: 'Set your time zone.',
         requiredPermissions: undefined,
