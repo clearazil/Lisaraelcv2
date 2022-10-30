@@ -20,6 +20,8 @@ export default class PageResponse extends ButtonResponse implements ButtonRespon
             return;
         }
 
+        console.log(this.interaction);
+
         const user = await guild.getGuildUser(this.interaction.user.id, this.interaction.user.username);
         const pageData = await guild.paginatedGuildGames(
             pageButton.page,
@@ -30,9 +32,10 @@ export default class PageResponse extends ButtonResponse implements ButtonRespon
                 },
                 required: false,
             },
+            pageButton.search,
         );
 
-        const gameList = new PaginatedGamesList(pageData.games, pageData.currentPage, pageData.finalPage);
+        const gameList = new PaginatedGamesList(pageData.games, pageData.currentPage, pageData.finalPage, pageButton.search);
 
         if (gameList === undefined) {
             return;

@@ -5,11 +5,13 @@ export default class PaginatedGamesList {
     games: Game[];
     page: number;
     finalPage: number;
+    search: string | undefined;
 
-    public constructor(games: Game[], page: number, finalPage: number) {
+    public constructor(games: Game[], page: number, finalPage: number, search: string | undefined) {
         this.games = games;
         this.page = page;
         this.finalPage = finalPage;
+        this.search = search;
     }
 
     public getDescription(): string {
@@ -56,6 +58,7 @@ export default class PaginatedGamesList {
                         data: {
                             gameId: game.id,
                             page: this.page,
+                            search: this.search,
                         },
                     }))
                     .setLabel(String(number))
@@ -73,6 +76,7 @@ export default class PaginatedGamesList {
                     new ButtonBuilder()
                         .setCustomId(JSON.stringify({type: 'page', data: {
                             page: this.page === 1 ? this.page : this.page - 1,
+                            search: this.search,
                         }}))
                         .setEmoji('⬅️')
                         .setStyle(ButtonStyle.Primary)
@@ -80,6 +84,7 @@ export default class PaginatedGamesList {
                     new ButtonBuilder()
                         .setCustomId(JSON.stringify({type: 'page', data: {
                             page: this.page + 1,
+                            search: this.search,
                         }}))
                         .setEmoji('➡️')
                         .setStyle(ButtonStyle.Primary)

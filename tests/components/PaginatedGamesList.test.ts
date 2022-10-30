@@ -17,7 +17,7 @@ const games = [
     } as unknown as Game,
 ];
 
-const gameList = new PaginatedGamesList(games, 1, 10);
+const gameList = new PaginatedGamesList(games, 1, 10, undefined);
 
 test('getDescription returns string', () => {
     expect(typeof gameList.getDescription()).toBe('string');

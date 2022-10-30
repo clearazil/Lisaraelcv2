@@ -1,5 +1,5 @@
 import type {Includeable} from 'sequelize';
-import {Sequelize, Model, DataTypes} from 'sequelize';
+import {Op, Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
 import User from './User';
 import Game from './Game';
@@ -42,33 +42,50 @@ class Guild extends Model {
         return user;
     }
 
-    public async paginatedGuildGames(currentPage: number, include: Includeable | undefined = undefined): Promise<GamesPageData> {
+    public async paginatedGuildGames(currentPage: number, include: Includeable | undefined = undefined, search: string | undefined = undefined): Promise<GamesPageData> {
         const limit = 10;
         const offset = (currentPage - 1) * limit;
 
+        const where = this.whereWithSearch(search);
+
         const games = await Game.findAll({
-            where: {
-                guildId: this.id,
-            },
+            order: [
+                ['name', 'ASC'],
+            ],
+            where,
             include,
             limit,
             offset,
         });
 
-        const totalGames = await this.guildGamesCount();
+        const totalGames = await this.guildGamesCount(search);
         const finalPage = Math.ceil(totalGames / limit);
 
         return {games, currentPage, finalPage};
     }
 
-    public async guildGamesCount(): Promise<number> {
+    public async guildGamesCount(search: string | undefined): Promise<number> {
+        const where = this.whereWithSearch(search);
+
         const count = await Game.count({
-            where: {
-                guildId: this.id,
-            },
+            where,
         });
 
         return count;
+    }
+
+    private whereWithSearch(search: string | undefined) {
+        let where = {
+            guildId: this.id,
+        };
+
+        if (search !== undefined) {
+            where = {...where, ...{name: {
+                [Op.like]: `%${search}%`,
+            }}};
+        }
+
+        return where;
     }
 }
 

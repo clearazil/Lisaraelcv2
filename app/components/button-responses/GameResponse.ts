@@ -34,9 +34,10 @@ export default class GameResponse extends ButtonResponse implements ButtonRespon
                 },
                 required: false,
             },
+            subscribeButton.search,
         );
 
-        const gameList = new PaginatedGamesList(pageData.games, pageData.currentPage, pageData.finalPage);
+        const gameList = new PaginatedGamesList(pageData.games, pageData.currentPage, pageData.finalPage, subscribeButton.search);
         const description = gameList.getDescription();
 
         const embeds = [
