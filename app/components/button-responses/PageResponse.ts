@@ -20,8 +20,6 @@ export default class PageResponse extends ButtonResponse implements ButtonRespon
             return;
         }
 
-        console.log(this.interaction);
-
         const user = await guild.getGuildUser(this.interaction.user.id, this.interaction.user.username);
         const pageData = await guild.paginatedGuildGames(
             pageButton.page,
