@@ -6,6 +6,8 @@ const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: 
 
 class User extends Model {
     declare id: number;
+    declare guildId: number;
+    declare name: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     declare UserSetting: UserSetting;
 }

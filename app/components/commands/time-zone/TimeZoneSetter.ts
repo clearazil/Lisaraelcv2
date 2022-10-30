@@ -27,21 +27,11 @@ export default class TimeZoneSetter {
             return false;
         }
 
-        let user = await User.findOne({
-            where: {
-                discordUserId: userData.discordUserId,
-                guildId: guild.id,
-            },
-            include: UserSetting,
-        });
-
-        if (user === null) {
-            user = await User.create({
-                discordUserId: userData.discordUserId,
-                name: userData.username,
-                guildId: guild.id,
-            });
-        }
+        const user = await guild.getGuildUser(
+            userData.discordUserId,
+            userData.username,
+            UserSetting,
+        );
 
         if (user.UserSetting !== null) {
             user.UserSetting.timeZone = this.timeZoneData.timeZone;

@@ -10,8 +10,10 @@ import Guild from '@database/models/Guild';
 import type ButtonData from './types/ButtonData';
 import type PageButton from './types/PageButton';
 import {EmbedBuilder} from 'discord.js';
-import GameLister from './GameLister';
+import GameLister from './PaginatedGamesList';
 import type SubscribeGameButton from './types/SubscribeGameButton';
+import ButtonResponseFactory from './ButtonResponseFactory';
+import type ButtonResponseInterface from './interfaces/ButtonResponseInterface';
 
 /**
  *
@@ -68,55 +70,8 @@ export default class Bot {
             if (interaction.isButton()) {
                 console.log('Responding to button interaction...');
 
-                try {
-                    const buttonData: ButtonData = JSON.parse(interaction.customId) as ButtonData;
-
-                    if (buttonData.type === 'subscribeGame') {
-                        const subscribeButton: SubscribeGameButton = buttonData.data as SubscribeGameButton;
-
-                        const gameList = await GameLister.createGameLister(interaction, subscribeButton.page);
-
-                        if (gameList === undefined) {
-                            return;
-                        }
-
-                        await gameList.subscribeGame(subscribeButton.gameId);
-
-                        const description = gameList.getDescription();
-
-                        const embeds = [
-                            new EmbedBuilder()
-                                .setColor(0x0099FF)
-                                .setDescription(description),
-                        ];
-
-                        await interaction.update({embeds});
-                    }
-
-                    if (buttonData.type === 'page') {
-                        const pageButton: PageButton = buttonData.data as PageButton;
-
-                        const gameList = await GameLister.createGameLister(interaction, pageButton.page);
-
-                        if (gameList === undefined) {
-                            return;
-                        }
-
-                        const description = gameList.getDescription();
-
-                        const embeds = [
-                            new EmbedBuilder()
-                                .setColor(0x0099FF)
-                                .setDescription(description),
-                        ];
-
-                        const rows = gameList.getActionRows();
-
-                        await interaction.update({embeds, components: rows});
-                    }
-                } catch (error: unknown) {
-                    console.log(error);
-                }
+                const buttonResponse: ButtonResponseInterface = new ButtonResponseFactory().getResponse(interaction);
+                buttonResponse.run();
             }
         });
     }

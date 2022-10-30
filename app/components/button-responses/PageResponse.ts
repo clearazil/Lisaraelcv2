@@ -1,23 +1,15 @@
-import Command from '@components/Command';
-import type CommandInterface from '../interfaces/CommandInterface';
+import ButtonResponse from '@components/ButtonResponse';
+import type ButtonResponseInterface from '@components/interfaces/ButtonResponseInterface';
+import type PageButton from '@components/types/PageButton';
+import PaginatedGamesList from '@components/PaginatedGamesList';
 import {EmbedBuilder} from 'discord.js';
 import Guild from '@database/models/Guild';
-import PaginatedGamesList from '@components/PaginatedGamesList';
 import UserGameSetting from '@database/models/UserGameSetting';
 
-export default class GameCommand extends Command implements CommandInterface {
-    public run() {
-        if (this.interaction.commandName === 'games') {
-            console.log('Running games command...');
-            void this.listGames();
-        }
-    }
+export default class PageResponse extends ButtonResponse implements ButtonResponseInterface {
+    public async run() {
+        const pageButton: PageButton = this.buttonData.data as PageButton;
 
-    public hasPermissions() {
-        return true;
-    }
-
-    public async listGames() {
         const guild = await Guild.findOne({
             where: {
                 discordGuildId: this.interaction.guildId,
@@ -29,9 +21,8 @@ export default class GameCommand extends Command implements CommandInterface {
         }
 
         const user = await guild.getGuildUser(this.interaction.user.id, this.interaction.user.username);
-
         const pageData = await guild.paginatedGuildGames(
-            1,
+            pageButton.page,
             {
                 model: UserGameSetting,
                 where: {
@@ -41,15 +32,13 @@ export default class GameCommand extends Command implements CommandInterface {
             },
         );
 
-        if (pageData.games.length < 1) {
-            await this.interaction.reply({content: 'This server doesn\'t have any games! Ask a moderator to add some.'});
+        const gameList = new PaginatedGamesList(pageData.games, pageData.currentPage, pageData.finalPage);
+
+        if (gameList === undefined) {
             return;
         }
 
-        const gameList = new PaginatedGamesList(pageData.games, pageData.currentPage, pageData.finalPage);
-
         const description = gameList.getDescription();
-        const rows = gameList.getButtonRows('subscribeGame');
 
         const embeds = [
             new EmbedBuilder()
@@ -57,6 +46,8 @@ export default class GameCommand extends Command implements CommandInterface {
                 .setDescription(description),
         ];
 
-        await this.interaction.reply({embeds, components: rows});
+        const rows = gameList.getButtonRows('subscribeGame');
+
+        await this.interaction.update({embeds, components: rows});
     }
 }
