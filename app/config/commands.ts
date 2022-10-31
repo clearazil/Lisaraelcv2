@@ -104,7 +104,6 @@ export default [
         classType: 'GameCommand',
     },
     {
-        // Not implemented
         name: 'add-alias',
         description: 'Add an alias to a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,

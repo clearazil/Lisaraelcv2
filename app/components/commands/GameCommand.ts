@@ -5,6 +5,7 @@ import Guild from '@database/models/Guild';
 import PaginatedGamesList from '@components/PaginatedGamesList';
 import UserGameSetting from '@database/models/UserGameSetting';
 import Game from '@database/models/Game';
+import GameAlias from '@database/models/GameAlias';
 
 export default class GameCommand extends Command implements CommandInterface {
     public run() {
@@ -22,6 +23,15 @@ export default class GameCommand extends Command implements CommandInterface {
             const game = this.interaction.options.getString('game') ?? '';
 
             void this.removeGame(game);
+        }
+
+        if (this.interaction.commandName === 'add-alias') {
+            console.log('Running add-alias command...');
+
+            const game = this.interaction.options.getString('game') ?? '';
+            const alias = this.interaction.options.getString('alias') ?? '';
+
+            void this.addAlias(game, alias);
         }
 
         if (this.interaction.commandName === 'games') {
@@ -111,6 +121,62 @@ export default class GameCommand extends Command implements CommandInterface {
         }
 
         await this.interaction.reply({content: `${gameName} does not exist.`});
+    }
+
+    public async addAlias(gameName: string, aliasName: string) {
+        const guild = await Guild.findOne({
+            where: {
+                discordGuildId: this.interaction.guildId,
+            },
+        });
+
+        if (guild === null) {
+            return;
+        }
+
+        const game = await Game.findOne({
+            where: {
+                guildId: guild.id,
+                name: gameName,
+            },
+        });
+
+        if (game === null) {
+            await this.interaction.reply({
+                content: `The game ${gameName} does not exist.`,
+                ephemeral: this.command.ephemeral,
+            });
+
+            return;
+        }
+
+        const alias = await GameAlias.findOne({
+            include: Game,
+            where: {
+                guildId: guild.id,
+                name: aliasName,
+            },
+        });
+
+        if (alias !== null) {
+            await this.interaction.reply({
+                content: `The alias '${aliasName}' already belongs to ${alias.Game.name}.`,
+                ephemeral: this.command.ephemeral,
+            });
+
+            return;
+        }
+
+        await GameAlias.create({
+            guildId: guild.id,
+            gameId: game.id,
+            name: aliasName,
+        });
+
+        await this.interaction.reply({
+            content: `The alias '${aliasName}' was created for ${gameName}.`,
+            ephemeral: this.command.ephemeral,
+        });
     }
 
     public async listGames(search: string | undefined) {
