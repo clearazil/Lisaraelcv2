@@ -11,6 +11,8 @@ class Game extends Model {
     declare lastUsed: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     declare UserGameSettings: UserGameSetting[];
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    declare GameAliases: Game[];
 
     mention(): string {
         return `<@&${this.discordRoleId}>`;

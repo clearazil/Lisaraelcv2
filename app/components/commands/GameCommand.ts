@@ -42,6 +42,14 @@ export default class GameCommand extends Command implements CommandInterface {
             void this.removeAlias(alias);
         }
 
+        if (this.interaction.commandName === 'aliases') {
+            console.log('Running aliases command...');
+
+            const game = this.interaction.options.getString('game') ?? '';
+
+            void this.aliases(game);
+        }
+
         if (this.interaction.commandName === 'games') {
             console.log('Running games command...');
 
@@ -221,6 +229,52 @@ export default class GameCommand extends Command implements CommandInterface {
             content: `The alias '${aliasName}' for ${alias.Game.name} was removed.`,
             ephemeral: this.command.ephemeral,
         });
+    }
+
+    public async aliases(gameName: string) {
+        const guild = await Guild.findOne({
+            where: {
+                discordGuildId: this.interaction.guildId,
+            },
+        });
+
+        if (guild === null) {
+            return;
+        }
+
+        const game = await Game.findOne({
+            include: GameAlias,
+            where: {
+                guildId: guild.id,
+                name: gameName,
+            },
+        });
+
+        if (game === null) {
+            await this.interaction.reply({
+                content: `The game ${gameName} does not exist.`,
+                ephemeral: this.command.ephemeral,
+            });
+
+            return;
+        }
+
+        if (game.GameAliases.length < 1) {
+            await this.interaction.reply({
+                content: `The game ${gameName} does not have any aliases.`,
+                ephemeral: this.command.ephemeral,
+            });
+
+            return;
+        }
+
+        let reply = `The game ${gameName} has the following aliases:\n\n`;
+
+        for (const alias of game.GameAliases) {
+            reply += `> ${alias.name}\n`;
+        }
+
+        await this.interaction.reply({content: reply, ephemeral: this.command.ephemeral});
     }
 
     public async listGames(search: string | undefined) {

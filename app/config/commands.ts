@@ -140,7 +140,6 @@ export default [
         classType: 'GameCommand',
     },
     {
-        // Not implemented
         name: 'aliases',
         description: 'View all aliases belonging to a game.',
         requiredPermissions: undefined,
