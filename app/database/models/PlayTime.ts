@@ -6,6 +6,7 @@ const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: 
 class PlayTime extends Model {
     declare id: number;
     declare guildId: number;
+    declare name: string;
     declare emoji: string;
     declare timeStart: string;
     declare timeEnd: string;

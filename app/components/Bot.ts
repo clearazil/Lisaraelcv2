@@ -14,6 +14,9 @@ import GameLister from './PaginatedGamesList';
 import type SubscribeGameButton from './types/SubscribeGameButton';
 import ButtonResponseFactory from './ButtonResponseFactory';
 import type ButtonResponseInterface from './interfaces/ButtonResponseInterface';
+import PlayTimeUser from '@database/models/PlayTimeUser';
+import PlayTimeSetter from './PlayTimeSetter';
+import PlayTime from '@database/models/PlayTime';
 
 /**
  *
@@ -72,6 +75,22 @@ export default class Bot {
 
                 const buttonResponse: ButtonResponseInterface = new ButtonResponseFactory().getResponse(interaction);
                 buttonResponse.run();
+            }
+
+            if (interaction.isSelectMenu()) {
+                console.log('Responding to select menu interaction...');
+
+                if (interaction.customId === 'set-play-times') {
+                    console.log('Responding to set-play-times select menu...');
+                    const setter = new PlayTimeSetter();
+                    const options = await setter.getUpdateOptions(interaction);
+
+                    if (options === undefined) {
+                        return;
+                    }
+
+                    await interaction.update(options);
+                }
             }
         });
     }

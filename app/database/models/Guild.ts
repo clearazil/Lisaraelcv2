@@ -4,6 +4,7 @@ import database from '@config/database';
 import User from './User';
 import Game from './Game';
 import type GamesPageData from '@components/types/GamesPageData';
+import PlayTime from './PlayTime';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
@@ -20,12 +21,23 @@ class Guild extends Model {
                 discordGuildId: discordId,
                 name,
             });
+
+            await guild.seedPlayTimes();
         }
 
         return guild;
     }
 
     declare id: number;
+    declare discordGuildId: string;
+    declare name: string;
+    declare moderatorRoleId: string;
+    declare settingsChannel: string;
+    declare gamesChannelId: string;
+    declare playingChannelId: string;
+    declare botChannelId: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    declare PlayTimes: PlayTime[];
 
     public async getGuildUser(discordUserId: string, name: string, include: Includeable | Includeable[] | undefined = undefined): Promise<User> {
         const [user] = await User.findOrCreate({
@@ -72,6 +84,51 @@ class Guild extends Model {
         });
 
         return count;
+    }
+
+    private async seedPlayTimes() {
+        const playTimes = [];
+
+        playTimes.push(
+            {
+                guildId: this.id,
+                name: 'morning',
+                emoji: '1️⃣',
+                timeStart: '08:00:00',
+                timeEnd: '11:59:59',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                guildId: this.id,
+                name: 'afternoon',
+                emoji: '2️⃣',
+                timeStart: '12:00:00',
+                timeEnd: '17:59:59',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                guildId: this.id,
+                name: 'evening',
+                emoji: '3️⃣',
+                timeStart: '18:00:00',
+                timeEnd: '23:59:59',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            {
+                guildId: this.id,
+                name: 'night',
+                emoji: '4️⃣',
+                timeStart: '00:00:00',
+                timeEnd: '07:59:59',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+        );
+
+        await PlayTime.bulkCreate(playTimes);
     }
 
     private whereWithSearch(search: string | undefined) {

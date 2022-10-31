@@ -7,6 +7,8 @@ import UserSetting from '@database/models/UserSetting';
 import PlayTime from '@database/models/PlayTime';
 import UserGameSetting from '@database/models/UserGameSetting';
 import Helper from '@components/Helper';
+import {ActionRowBuilder, SelectMenuBuilder, EmbedBuilder} from '@discordjs/builders';
+import PlayTimeSetter from '@components/PlayTimeSetter';
 
 export default class SettingCommand extends Command implements CommandInterface {
     public run() {
@@ -17,6 +19,11 @@ export default class SettingCommand extends Command implements CommandInterface 
         if (this.interaction.commandName === 'settings') {
             console.log('Running settings command...');
             void this.settings();
+        }
+
+        if (this.interaction.commandName === 'set-play-times') {
+            console.log('Running set-play-times command...');
+            void this.setPlayTimes();
         }
 
         if (this.interaction.commandName === 'notify-for-all-games') {
@@ -96,6 +103,19 @@ export default class SettingCommand extends Command implements CommandInterface 
         messageReply += playTimesMessage;
 
         await this.interaction.reply({content: messageReply, ephemeral: this.command.ephemeral});
+    }
+
+    public async setPlayTimes() {
+        const setter = new PlayTimeSetter();
+        const options = await setter.getReplyOptions(this.interaction);
+
+        if (options === undefined) {
+            return;
+        }
+
+        await this.interaction.reply({...options, ...{
+            ephemeral: this.command.ephemeral,
+        }});
     }
 
     public async notifyForAllGames() {

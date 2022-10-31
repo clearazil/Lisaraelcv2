@@ -12,6 +12,14 @@ export default [
         classType: 'SettingCommand',
     },
     {
+        name: 'set-play-times',
+        description: 'Set times when to receive notifications.',
+        requiredPermissions: undefined,
+        ephemeral: true,
+        arguments: [],
+        classType: 'SettingCommand',
+    },
+    {
         name: 'game-settings',
         description: 'Shows the games you are (or are not) subscribed to.',
         requiredPermissions: undefined,
