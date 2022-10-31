@@ -115,12 +115,12 @@ export default class GameCommand extends Command implements CommandInterface {
         if (game !== null) {
             await game.destroy();
 
-            await this.interaction.reply({content: `${gameName} has been deleted.`});
+            await this.interaction.reply({content: `${gameName} has been deleted.`, ephemeral: this.command.ephemeral});
 
             return;
         }
 
-        await this.interaction.reply({content: `${gameName} does not exist.`});
+        await this.interaction.reply({content: `${gameName} does not exist.`, ephemeral: this.command.ephemeral});
     }
 
     public async addAlias(gameName: string, aliasName: string) {
@@ -189,7 +189,7 @@ export default class GameCommand extends Command implements CommandInterface {
 
     private async gameListing(search: string | undefined, type: string) {
         if (search !== undefined && search.length > 30) {
-            await this.interaction.reply({content: 'Your search cannot be longer than 30 characters.'});
+            await this.interaction.reply({content: 'Your search cannot be longer than 30 characters.', ephemeral: this.command.ephemeral});
             return;
         }
 
