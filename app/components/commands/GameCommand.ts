@@ -223,7 +223,12 @@ export default class GameCommand extends Command implements CommandInterface {
             return;
         }
 
-        await alias.destroy();
+        await GameAlias.destroy({
+            where: {
+                guildId: guild.id,
+                name: aliasName,
+            },
+        });
 
         await this.interaction.reply({
             content: `The alias '${aliasName}' for ${alias.Game.name} was removed.`,
