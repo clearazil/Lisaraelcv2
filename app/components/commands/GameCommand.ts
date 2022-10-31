@@ -34,6 +34,14 @@ export default class GameCommand extends Command implements CommandInterface {
             void this.addAlias(game, alias);
         }
 
+        if (this.interaction.commandName === 'remove-alias') {
+            console.log('Running remove-alias command...');
+
+            const alias = this.interaction.options.getString('alias') ?? '';
+
+            void this.removeAlias(alias);
+        }
+
         if (this.interaction.commandName === 'games') {
             console.log('Running games command...');
 
@@ -175,6 +183,42 @@ export default class GameCommand extends Command implements CommandInterface {
 
         await this.interaction.reply({
             content: `The alias '${aliasName}' was created for ${gameName}.`,
+            ephemeral: this.command.ephemeral,
+        });
+    }
+
+    public async removeAlias(aliasName: string) {
+        const guild = await Guild.findOne({
+            where: {
+                discordGuildId: this.interaction.guildId,
+            },
+        });
+
+        if (guild === null) {
+            return;
+        }
+
+        const alias = await GameAlias.findOne({
+            include: Game,
+            where: {
+                guildId: guild.id,
+                name: aliasName,
+            },
+        });
+
+        if (alias === null) {
+            await this.interaction.reply({
+                content: `The alias '${aliasName}' does not exist.`,
+                ephemeral: this.command.ephemeral,
+            });
+
+            return;
+        }
+
+        await alias.destroy();
+
+        await this.interaction.reply({
+            content: `The alias '${aliasName}' for ${alias.Game.name} was removed.`,
             ephemeral: this.command.ephemeral,
         });
     }

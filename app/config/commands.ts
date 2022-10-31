@@ -125,14 +125,13 @@ export default [
         classType: 'GameCommand',
     },
     {
-        // Not implemented
         name: 'remove-alias',
         description: 'Remove an alias from a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
         ephemeral: false,
         arguments: [
             {
-                name: 'game',
+                name: 'alias',
                 description: 'The alias you want to remove.',
                 required: true,
                 type: 'String',
