@@ -16,6 +16,14 @@ export default class GameCommand extends Command implements CommandInterface {
             void this.addGame(game);
         }
 
+        if (this.interaction.commandName === 'remove-game') {
+            console.log('Running remove-game command...');
+
+            const game = this.interaction.options.getString('game') ?? '';
+
+            void this.removeGame(game);
+        }
+
         if (this.interaction.commandName === 'games') {
             console.log('Running games command...');
 
@@ -74,6 +82,35 @@ export default class GameCommand extends Command implements CommandInterface {
             content: `${game} has been added.`,
             ephemeral: this.command.ephemeral,
         });
+    }
+
+    public async removeGame(gameName: string) {
+        const guild = await Guild.findOne({
+            where: {
+                discordGuildId: this.interaction.guildId,
+            },
+        });
+
+        if (guild === null) {
+            return;
+        }
+
+        const game = await Game.findOne({
+            where: {
+                guildId: guild.id,
+                name: gameName,
+            },
+        });
+
+        if (game !== null) {
+            await game.destroy();
+
+            await this.interaction.reply({content: `${gameName} has been deleted.`});
+
+            return;
+        }
+
+        await this.interaction.reply({content: `${gameName} does not exist.`});
     }
 
     public async listGames(search: string | undefined) {

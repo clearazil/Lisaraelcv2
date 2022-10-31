@@ -59,7 +59,6 @@ export default [
         classType: 'GameCommand',
     },
     {
-        // Not implemented
         name: 'ignore-games',
         description: 'Look up and ignore games.',
         requiredPermissions: undefined,
@@ -90,7 +89,6 @@ export default [
         classType: 'GameCommand',
     },
     {
-        // Not implemented
         name: 'remove-game',
         description: 'Remove a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,

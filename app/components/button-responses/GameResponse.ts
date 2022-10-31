@@ -7,6 +7,7 @@ import Guild from '@database/models/Guild';
 import UserGameSetting from '@database/models/UserGameSetting';
 import type User from '@database/models/User';
 import type SubscribeGameButtonRaw from '@components/types/buttons/SubscribeGameButtonRaw';
+import Game from '@database/models/Game';
 
 export default class GameResponse extends ButtonResponse implements ButtonResponseInterface {
     public async run() {
@@ -30,7 +31,9 @@ export default class GameResponse extends ButtonResponse implements ButtonRespon
         const user = await guild.getGuildUser(this.interaction.user.id, this.interaction.user.username);
         const notify = this.buttonData.destination !== 'ignoreGame';
 
-        await this.setUserNotify(user, subscribeButton.gameId, notify);
+        if (!await this.setUserNotify(user, subscribeButton.gameId, notify)) {
+            return;
+        }
 
         const pageData = await guild.paginatedGuildGames(
             subscribeButton.page,
@@ -65,6 +68,12 @@ export default class GameResponse extends ButtonResponse implements ButtonRespon
         });
 
         if (userGameSetting === null) {
+            const game = await Game.findOne({where: {id: gameId}});
+
+            if (game === null) {
+                return false;
+            }
+
             await UserGameSetting.create({
                 userId: user.id,
                 gameId,
@@ -76,5 +85,7 @@ export default class GameResponse extends ButtonResponse implements ButtonRespon
             userGameSetting.notify = notify;
             await userGameSetting.save();
         }
+
+        return true;
     }
 }
