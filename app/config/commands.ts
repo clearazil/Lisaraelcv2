@@ -20,14 +20,6 @@ export default [
         classType: 'SettingCommand',
     },
     {
-        name: 'game-settings',
-        description: 'Shows the games you are (or are not) subscribed to.',
-        requiredPermissions: undefined,
-        ephemeral: false,
-        arguments: [],
-        classType: 'SettingCommand',
-    },
-    {
         name: 'notify-for-all-games',
         description: 'Toggle notifications for all games on/off.',
         requiredPermissions: undefined,
@@ -50,34 +42,26 @@ export default [
         ],
         classType: 'SettingCommand',
     },
-    // Setup
-    {
-        name: 'setup',
-        description: 'View setup requirements.',
-        requiredPermissions: PermissionFlagsBits.Administrator,
-        ephemeral: false,
-        arguments: [],
-        classType: 'SetupCommand',
-    },
-    {
-        name: 'setup-playing-channel',
-        description: 'Set the \'now playing\' channel.',
-        requiredPermissions: PermissionFlagsBits.Administrator,
-        ephemeral: false,
-        arguments: [
-            {
-                name: 'channel',
-                description: 'The channel where messages from the /lfg command are displayed.',
-                required: true,
-                type: 'Channel',
-            },
-        ],
-        classType: 'SetupCommand',
-    },
     // Games
     {
         name: 'games',
         description: 'Look up and subscribe to games.',
+        requiredPermissions: undefined,
+        ephemeral: true,
+        arguments: [
+            {
+                name: 'search',
+                description: 'Search for a game.',
+                required: false,
+                type: 'String',
+            },
+        ],
+        classType: 'GameCommand',
+    },
+    {
+        // Not implemented
+        name: 'ignore-games',
+        description: 'Look up and ignore games.',
         requiredPermissions: undefined,
         ephemeral: true,
         arguments: [
@@ -106,6 +90,7 @@ export default [
         classType: 'GameCommand',
     },
     {
+        // Not implemented
         name: 'remove-game',
         description: 'Remove a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
@@ -121,6 +106,7 @@ export default [
         classType: 'GameCommand',
     },
     {
+        // Not implemented
         name: 'add-alias',
         description: 'Add an alias to a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
@@ -142,6 +128,7 @@ export default [
         classType: 'GameCommand',
     },
     {
+        // Not implemented
         name: 'remove-alias',
         description: 'Remove an alias from a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
@@ -157,6 +144,7 @@ export default [
         classType: 'GameCommand',
     },
     {
+        // Not implemented
         name: 'aliases',
         description: 'View all aliases belonging to a game.',
         requiredPermissions: undefined,
@@ -172,14 +160,15 @@ export default [
         classType: 'GameCommand',
     },
     {
-        name: 'purge-roles',
-        description: 'Purge roles not used after a given date.',
-        requiredPermissions: PermissionFlagsBits.Administrator,
-        ephemeral: false,
+        // Not implemented
+        name: 'lfg',
+        description: 'Post a \'looking for group\' message for a game.',
+        requiredPermissions: undefined,
+        ephemeral: true,
         arguments: [
             {
-                name: 'date',
-                description: 'Purge the roles that haven\'t been used after this date (yyyy-mm-dd).',
+                name: 'message',
+                description: 'Your message. Games will be converted into role mentions.',
                 required: true,
                 type: 'String',
             },
