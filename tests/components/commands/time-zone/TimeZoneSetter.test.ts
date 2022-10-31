@@ -7,7 +7,7 @@ test('Returns time zone data', () => {
     expect(setter.timeZoneData).toBeDefined();
     expect(setter.timeZoneData?.timeZone).toBe('CET');
     expect(setter.timeZoneData?.timeZoneDifference).toBe('');
-    expect(setter.timeZoneData?.timeZoneOffset).toBe('');
+    expect(setter.timeZoneData?.timeZoneOffset).toBeUndefined();
 });
 
 test('Does not return time zone data', () => {
@@ -20,13 +20,13 @@ test('Time zone offset is set with +', () => {
     const setter = new TimeZoneSetter('CET+1');
 
     expect(setter.timeZoneData?.timeZoneDifference).toBe('+');
-    expect(setter.timeZoneData?.timeZoneOffset).toBe('1');
+    expect(setter.timeZoneData?.timeZoneOffset).toBe(1);
 });
 
 test('Time zone offset is set with -', () => {
     const setter = new TimeZoneSetter('EST-2');
 
     expect(setter.timeZoneData?.timeZoneDifference).toBe('-');
-    expect(setter.timeZoneData?.timeZoneOffset).toBe('2');
+    expect(setter.timeZoneData?.timeZoneOffset).toBe(2);
 });
 
