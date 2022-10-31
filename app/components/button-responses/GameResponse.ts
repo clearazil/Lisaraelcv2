@@ -1,15 +1,21 @@
 import ButtonResponse from '@components/ButtonResponse';
 import type ButtonResponseInterface from '@components/interfaces/ButtonResponseInterface';
-import type SubscribeGameButton from '@components/types/SubscribeGameButton';
+import type SubscribeGameButton from '@components/types/buttons/SubscribeGameButton';
 import PaginatedGamesList from '@components/PaginatedGamesList';
 import {EmbedBuilder} from 'discord.js';
 import Guild from '@database/models/Guild';
 import UserGameSetting from '@database/models/UserGameSetting';
 import type User from '@database/models/User';
+import type SubscribeGameButtonRaw from '@components/types/buttons/SubscribeGameButtonRaw';
 
 export default class GameResponse extends ButtonResponse implements ButtonResponseInterface {
     public async run() {
-        const subscribeButton: SubscribeGameButton = this.buttonData.data as SubscribeGameButton;
+        const rawData = this.buttonData.data as SubscribeGameButtonRaw;
+        const subscribeButton: SubscribeGameButton = {
+            gameId: rawData[1],
+            page: rawData[2],
+            search: rawData[3],
+        };
 
         const guild = await Guild.findOne({
             where: {
@@ -22,8 +28,9 @@ export default class GameResponse extends ButtonResponse implements ButtonRespon
         }
 
         const user = await guild.getGuildUser(this.interaction.user.id, this.interaction.user.username);
+        const notify = this.buttonData.destination !== 'ignoreGame';
 
-        await this.subscribeUserToGame(user, subscribeButton.gameId);
+        await this.setUserNotify(user, subscribeButton.gameId, notify);
 
         const pageData = await guild.paginatedGuildGames(
             subscribeButton.page,
@@ -49,7 +56,7 @@ export default class GameResponse extends ButtonResponse implements ButtonRespon
         await this.interaction.update({embeds});
     }
 
-    public async subscribeUserToGame(user: User, gameId: number) {
+    public async setUserNotify(user: User, gameId: number, notify: boolean) {
         const userGameSetting = await UserGameSetting.findOne({
             where: {
                 userId: user.id,
@@ -61,12 +68,12 @@ export default class GameResponse extends ButtonResponse implements ButtonRespon
             await UserGameSetting.create({
                 userId: user.id,
                 gameId,
-                notify: true,
+                notify,
             });
-        } else if (userGameSetting.notify) {
+        } else if (userGameSetting.notify === notify) {
             await userGameSetting.destroy();
         } else {
-            userGameSetting.notify = true;
+            userGameSetting.notify = notify;
             await userGameSetting.save();
         }
     }

@@ -39,7 +39,7 @@ export default class PaginatedGamesList {
         return description;
     }
 
-    public getButtonRows(buttonType: string): Array<ActionRowBuilder<ButtonBuilder>> {
+    public getButtonRows(destinationType: string): Array<ActionRowBuilder<ButtonBuilder>> {
         const rows: Array<ActionRowBuilder<ButtonBuilder>> = [];
 
         let number = 1;
@@ -53,8 +53,9 @@ export default class PaginatedGamesList {
 
             actionRow.addComponents(
                 new ButtonBuilder()
-                    .setCustomId(JSON.stringify({
-                        type: buttonType,
+                    .setCustomId(this.getCustomId({
+                        type: destinationType,
+                        destination: destinationType,
                         data: {
                             gameId: game.id,
                             page: this.page,
@@ -62,7 +63,7 @@ export default class PaginatedGamesList {
                         },
                     }))
                     .setLabel(String(number))
-                    .setStyle(ButtonStyle.Success),
+                    .setStyle(destinationType === 'ignoreGame' ? ButtonStyle.Danger : ButtonStyle.Success),
             );
 
             number++;
@@ -74,7 +75,7 @@ export default class PaginatedGamesList {
             new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
                     new ButtonBuilder()
-                        .setCustomId(JSON.stringify({type: 'page', data: {
+                        .setCustomId(this.getCustomId({destination: destinationType, type: 'page', data: {
                             page: this.page === 1 ? this.page : this.page - 1,
                             search: this.search,
                         }}))
@@ -82,7 +83,7 @@ export default class PaginatedGamesList {
                         .setStyle(ButtonStyle.Primary)
                         .setDisabled(this.page === 1),
                     new ButtonBuilder()
-                        .setCustomId(JSON.stringify({type: 'page', data: {
+                        .setCustomId(this.getCustomId({destination: destinationType, type: 'page', data: {
                             page: this.page + 1,
                             search: this.search,
                         }}))
@@ -93,5 +94,33 @@ export default class PaginatedGamesList {
         );
 
         return rows;
+    }
+
+    private getCustomId(data: Record<string, unknown>) {
+        const encodedData = this.encode(data);
+        const dataObj = JSON.stringify(encodedData);
+
+        return dataObj;
+    }
+
+    private encode(data: Record<string, unknown>) {
+        let encoded = {};
+        let number = 1;
+
+        for (const [key, value] of Object.entries(data)) {
+            if (typeof value === 'object' && value !== null) {
+                encoded = {...encoded, ...{
+                    [number]: this.encode(value as Record<string, unknown>),
+                }};
+            } else {
+                encoded = {...encoded, ...{
+                    [number]: value,
+                }};
+            }
+
+            number++;
+        }
+
+        return encoded;
     }
 }

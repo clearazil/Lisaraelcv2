@@ -1,14 +1,19 @@
 import ButtonResponse from '@components/ButtonResponse';
 import type ButtonResponseInterface from '@components/interfaces/ButtonResponseInterface';
-import type PageButton from '@components/types/PageButton';
+import type PageButton from '@components/types/buttons/PageButton';
 import PaginatedGamesList from '@components/PaginatedGamesList';
 import {EmbedBuilder} from 'discord.js';
 import Guild from '@database/models/Guild';
 import UserGameSetting from '@database/models/UserGameSetting';
+import type PageButtonRaw from '@components/types/buttons/PageButtonRaw';
 
 export default class PageResponse extends ButtonResponse implements ButtonResponseInterface {
     public async run() {
-        const pageButton: PageButton = this.buttonData.data as PageButton;
+        const rawData = this.buttonData.data as PageButtonRaw;
+        const pageButton: PageButton = {
+            page: rawData[1],
+            search: rawData[2],
+        };
 
         const guild = await Guild.findOne({
             where: {
@@ -47,7 +52,7 @@ export default class PageResponse extends ButtonResponse implements ButtonRespon
                 .setDescription(description),
         ];
 
-        const rows = gameList.getButtonRows('subscribeGame');
+        const rows = gameList.getButtonRows(this.buttonData.destination);
 
         await this.interaction.update({embeds, components: rows});
     }

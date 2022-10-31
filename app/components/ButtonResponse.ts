@@ -1,5 +1,5 @@
 import type {MessageComponentInteraction} from 'discord.js';
-import type ButtonData from './types/ButtonData';
+import type ButtonData from './types/buttons/ButtonData';
 
 export default class ButtonResponse {
     interaction: MessageComponentInteraction;

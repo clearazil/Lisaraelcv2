@@ -23,6 +23,14 @@ export default class GameCommand extends Command implements CommandInterface {
 
             void this.listGames(search);
         }
+
+        if (this.interaction.commandName === 'ignore-games') {
+            console.log('Running ignore-games command...');
+
+            const search = this.interaction.options.getString('search') ?? undefined;
+
+            void this.ignoreGames(search);
+        }
     }
 
     public hasPermissions() {
@@ -69,6 +77,19 @@ export default class GameCommand extends Command implements CommandInterface {
     }
 
     public async listGames(search: string | undefined) {
+        await this.gameListing(search, 'subscribeGame');
+    }
+
+    public async ignoreGames(search: string | undefined) {
+        await this.gameListing(search, 'ignoreGame');
+    }
+
+    private async gameListing(search: string | undefined, type: string) {
+        if (search !== undefined && search.length > 30) {
+            await this.interaction.reply({content: 'Your search cannot be longer than 30 characters.'});
+            return;
+        }
+
         const guild = await Guild.findOne({
             where: {
                 discordGuildId: this.interaction.guildId,
@@ -112,7 +133,7 @@ export default class GameCommand extends Command implements CommandInterface {
         const gameList = new PaginatedGamesList(pageData.games, pageData.currentPage, pageData.finalPage, search);
 
         const description = gameList.getDescription();
-        const rows = gameList.getButtonRows('subscribeGame');
+        const rows = gameList.getButtonRows(type);
 
         const embeds = [
             new EmbedBuilder()
@@ -120,8 +141,16 @@ export default class GameCommand extends Command implements CommandInterface {
                 .setDescription(description),
         ];
 
+        let interactionContent = '';
+
+        if (type === 'ignoreGame') {
+            interactionContent += 'Choose games to ignore';
+        } else {
+            interactionContent += 'Choose games to subscribe to:';
+        }
+
         await this.interaction.reply({
-            content: 'Choose games to subscribe to:',
+            content: interactionContent,
             embeds,
             components: rows,
             ephemeral: this.command.ephemeral,
