@@ -2,7 +2,6 @@ import type {ChatInputCommandInteraction} from 'discord.js';
 import type CommandInterface from './interfaces/CommandInterface';
 import GameCommand from './commands/GameCommand';
 import SettingCommand from './commands/SettingCommand';
-import SetupCommand from './commands/SetupCommand';
 import commands from '@config/commands';
 import type Command from './types/Command';
 
@@ -12,7 +11,6 @@ type CommandInterfaceConstructor = new (interaction: ChatInputCommandInteraction
 const defaultCommandMapping = new Map<string, CommandInterfaceConstructor>([
     ['SettingCommand', SettingCommand],
     ['GameCommand', GameCommand],
-    ['SetupCommand', SetupCommand],
 ]);
 
 export default class CommandFactory {
