@@ -24,7 +24,7 @@ async function main(): Promise<void> {
     console.log('adding new guild(s) to the database...');
     await bot.saveGuilds();
     console.log('registering commands...');
-    await bot.registerCommands(commands);
+    await bot.registerCommands();
     console.log('responding to interactions...');
     bot.respondToInteractions();
 }

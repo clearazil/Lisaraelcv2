@@ -2,11 +2,12 @@ import type {Client} from 'discord.js';
 import {Events} from 'discord.js';
 import {REST, Routes} from 'discord.js';
 import config from '@config/general';
-import type commands from '@config/commands';
+import commands from '@config/commands';
 import CommandBuilder from './CommandBuilder';
 import CommandFactory from './CommandFactory';
 import type CommandInterface from './interfaces/CommandInterface';
 import Guild from '@database/models/Guild';
+import type {Guild as ApiGuild} from 'discord.js';
 import ButtonResponseFactory from './ButtonResponseFactory';
 import type ButtonResponseInterface from './interfaces/ButtonResponseInterface';
 import PlayTimeSetter from './PlayTimeSetter';
@@ -37,19 +38,25 @@ export default class Bot {
 
         this.client.on('guildCreate', async guild => {
             await Guild.createIfNotExists(guild.id, guild.name);
+
+            await this.registerGuildCommands(guild);
         });
     }
 
-    public async registerCommands(commandsList: typeof commands) {
-        const slashCommands = new CommandBuilder(commandsList).run();
+    public async registerGuildCommands(apiGuild: ApiGuild) {
+        const slashCommands = new CommandBuilder(commands).run();
         const rest = new REST({version: '10'}).setToken(config.discord.token);
 
+        return rest.put(
+            Routes.applicationGuildCommands(config.discord.appId, apiGuild.id), {body: slashCommands},
+        );
+    }
+
+    public async registerCommands() {
         this.client.once('ready', async () => {
             const results = [];
             for (const guild of this.client.guilds.cache.values()) {
-                results.push(rest.put(
-                    Routes.applicationGuildCommands(config.discord.appId, guild.id), {body: slashCommands},
-                ));
+                results.push(this.registerGuildCommands(guild));
             }
 
             await Promise.all(results);
