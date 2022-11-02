@@ -19,22 +19,22 @@ export default class ButtonResponseFactory {
         readonly buttonDataMap = defaultButtonDataMapping,
     ) {}
 
-    public getResponse(interaction: MessageComponentInteraction): ButtonResponseInterface {
+    public getResponse(interaction: MessageComponentInteraction): ButtonResponseInterface | undefined {
         let buttonData;
 
-        try {
-            const dataRaw = JSON.parse(interaction.customId) as ButtonDataRaw;
+        const dataRaw = this.convertFromJson(interaction.customId) as ButtonDataRaw;
 
+        if (!this.checkRawData(dataRaw)) {
+            return;
+        }
+
+        if (dataRaw !== undefined) {
             buttonData = {
                 destination: dataRaw[1],
                 type: dataRaw[2],
                 data: dataRaw[3],
             };
-        } catch (error: unknown) {
-            buttonData = undefined;
-        }
 
-        if (buttonData !== undefined) {
             const constructor = this.buttonDataMap.get(buttonData.type);
 
             if (constructor) {
@@ -43,5 +43,17 @@ export default class ButtonResponseFactory {
         }
 
         throw new Error(`Unexpected customId: '${interaction.customId}'.`);
+    }
+
+    private convertFromJson(data: string) {
+        try {
+            return JSON.parse(data) as Record<string, unknown>;
+        } catch (error: unknown) {
+            return undefined;
+        }
+    }
+
+    private checkRawData(rawData: Record<string, unknown>): boolean {
+        return rawData[1] !== undefined && rawData[2] !== undefined && rawData[3] !== undefined;
     }
 }

@@ -7,16 +7,9 @@ import CommandBuilder from './CommandBuilder';
 import CommandFactory from './CommandFactory';
 import type CommandInterface from './interfaces/CommandInterface';
 import Guild from '@database/models/Guild';
-import type ButtonData from './types/buttons/ButtonData';
-import type PageButton from './types/buttons/PageButton';
-import {EmbedBuilder} from 'discord.js';
-import GameLister from './PaginatedGamesList';
-import type SubscribeGameButton from './types/buttons/SubscribeGameButton';
 import ButtonResponseFactory from './ButtonResponseFactory';
 import type ButtonResponseInterface from './interfaces/ButtonResponseInterface';
-import PlayTimeUser from '@database/models/PlayTimeUser';
 import PlayTimeSetter from './PlayTimeSetter';
-import PlayTime from '@database/models/PlayTime';
 
 /**
  *
@@ -73,8 +66,8 @@ export default class Bot {
             if (interaction.isButton()) {
                 console.log('Responding to button interaction...');
 
-                const buttonResponse: ButtonResponseInterface = new ButtonResponseFactory().getResponse(interaction);
-                buttonResponse.run();
+                const buttonResponse = new ButtonResponseFactory().getResponse(interaction);
+                buttonResponse?.run();
             }
 
             if (interaction.isSelectMenu()) {
