@@ -155,7 +155,6 @@ export default [
         classType: 'GameCommand',
     },
     {
-        // Not implemented
         name: 'lfg',
         description: 'Post a \'looking for group\' message for a game.',
         requiredPermissions: undefined,

@@ -1,6 +1,7 @@
 import {Sequelize, Model, DataTypes} from 'sequelize';
 import database from '@config/database';
 import type UserGameSetting from './UserGameSetting';
+import type {DateTime} from 'luxon';
 
 const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: database.storage});
 
@@ -8,7 +9,7 @@ class Game extends Model {
     declare id: number;
     declare name: string;
     declare discordRoleId: string;
-    declare lastUsed: string;
+    declare lastUsed: string | DateTime;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     declare UserGameSettings: UserGameSetting[];
     // eslint-disable-next-line @typescript-eslint/naming-convention

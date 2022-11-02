@@ -7,7 +7,7 @@ export async function up(queryInterface: QueryInterface) {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
         },
         discordGuildId: {
             allowNull: false,

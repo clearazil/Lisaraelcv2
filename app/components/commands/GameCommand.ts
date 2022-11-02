@@ -6,6 +6,7 @@ import PaginatedGamesList from '@components/PaginatedGamesList';
 import UserGameSetting from '@database/models/UserGameSetting';
 import Game from '@database/models/Game';
 import GameAlias from '@database/models/GameAlias';
+import Lfg from '@components/Lfg';
 
 export default class GameCommand extends Command implements CommandInterface {
     public run() {
@@ -64,6 +65,14 @@ export default class GameCommand extends Command implements CommandInterface {
             const search = this.interaction.options.getString('search') ?? undefined;
 
             void this.ignoreGames(search);
+        }
+
+        if (this.interaction.commandName === 'lfg') {
+            console.log('Running lfg command...');
+
+            const message = this.interaction.options.getString('message') ?? '';
+
+            void this.lfg(message);
         }
     }
 
@@ -130,6 +139,8 @@ export default class GameCommand extends Command implements CommandInterface {
 
         if (game !== null) {
             await game.destroy();
+
+            // Need to destroy the attached role as well!
 
             await this.interaction.reply({content: `${gameName} has been deleted.`, ephemeral: this.command.ephemeral});
 
@@ -288,6 +299,19 @@ export default class GameCommand extends Command implements CommandInterface {
 
     public async ignoreGames(search: string | undefined) {
         await this.gameListing(search, 'ignoreGame');
+    }
+
+    public async lfg(message: string) {
+        await this.interaction.deferReply({ephemeral: this.command.ephemeral});
+        const lfg = new Lfg();
+
+        const lfgOptions = await lfg.lfg(this.interaction, message);
+
+        if (lfgOptions === undefined) {
+            return;
+        }
+
+        await this.interaction.editReply(lfgOptions);
     }
 
     private async gameListing(search: string | undefined, type: string) {
