@@ -76,10 +76,6 @@ export default class GameCommand extends Command implements CommandInterface {
         }
     }
 
-    public hasPermissions() {
-        return true;
-    }
-
     public async addGame(game: string) {
         const guild = await Guild.findOne({
             where: {

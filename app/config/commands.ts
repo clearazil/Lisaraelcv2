@@ -1,5 +1,5 @@
 
-import {PermissionFlagsBits} from 'discord.js';
+import {PermissionFlagsBits, PermissionsBitField} from 'discord.js';
 
 export default [
     // General
@@ -7,6 +7,7 @@ export default [
         name: 'settings',
         description: 'Show your personal settings.',
         requiredPermissions: undefined,
+        requiredBotPermissions: undefined,
         ephemeral: false,
         arguments: [],
         classType: 'SettingCommand',
@@ -15,6 +16,7 @@ export default [
         name: 'set-play-times',
         description: 'Set times when to receive notifications.',
         requiredPermissions: undefined,
+        requiredBotPermissions: undefined,
         ephemeral: true,
         arguments: [],
         classType: 'SettingCommand',
@@ -23,6 +25,7 @@ export default [
         name: 'notify-for-all-games',
         description: 'Toggle notifications for all games on/off.',
         requiredPermissions: undefined,
+        requiredBotPermissions: undefined,
         ephemeral: false,
         arguments: [],
         classType: 'SettingCommand',
@@ -31,6 +34,7 @@ export default [
         name: 'time-zone',
         description: 'Set your time zone.',
         requiredPermissions: undefined,
+        requiredBotPermissions: undefined,
         ephemeral: false,
         arguments: [
             {
@@ -47,6 +51,7 @@ export default [
         name: 'games',
         description: 'Look up and subscribe to games.',
         requiredPermissions: undefined,
+        requiredBotPermissions: undefined,
         ephemeral: true,
         arguments: [
             {
@@ -62,6 +67,7 @@ export default [
         name: 'ignore-games',
         description: 'Look up and ignore games.',
         requiredPermissions: undefined,
+        requiredBotPermissions: undefined,
         ephemeral: true,
         arguments: [
             {
@@ -77,6 +83,7 @@ export default [
         name: 'add-game',
         description: 'Add a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
+        requiredBotPermissions: undefined,
         ephemeral: false,
         arguments: [
             {
@@ -92,6 +99,7 @@ export default [
         name: 'remove-game',
         description: 'Remove a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
+        requiredBotPermissions: undefined,
         ephemeral: false,
         arguments: [
             {
@@ -107,6 +115,7 @@ export default [
         name: 'add-alias',
         description: 'Add an alias to a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
+        requiredBotPermissions: undefined,
         ephemeral: false,
         arguments: [
             {
@@ -128,6 +137,7 @@ export default [
         name: 'remove-alias',
         description: 'Remove an alias from a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
+        requiredBotPermissions: undefined,
         ephemeral: false,
         arguments: [
             {
@@ -143,6 +153,7 @@ export default [
         name: 'aliases',
         description: 'View all aliases belonging to a game.',
         requiredPermissions: undefined,
+        requiredBotPermissions: undefined,
         ephemeral: false,
         arguments: [
             {
@@ -158,6 +169,10 @@ export default [
         name: 'lfg',
         description: 'Post a \'looking for group\' message for a game.',
         requiredPermissions: undefined,
+        requiredBotPermissions: new Map([
+            [PermissionFlagsBits.ManageRoles, 'manage roles'],
+            [PermissionFlagsBits.SendMessages, 'send messages'],
+        ]),
         ephemeral: true,
         arguments: [
             {

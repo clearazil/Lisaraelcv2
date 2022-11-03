@@ -1,6 +1,6 @@
 
 type CommandInterface = {
     run: () => void;
-    hasPermissions: () => boolean;
+    hasPermissions: () => Promise<boolean>;
 };
 export default CommandInterface;

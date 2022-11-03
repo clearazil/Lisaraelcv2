@@ -43,10 +43,6 @@ export default class SettingCommand extends Command implements CommandInterface 
         }
     }
 
-    public hasPermissions() {
-        return true;
-    }
-
     public async settings() {
         const guild = await Guild.findOne({
             where: {

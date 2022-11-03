@@ -67,7 +67,12 @@ export default class Bot {
         this.client.on(Events.InteractionCreate, async interaction => {
             if (interaction.isChatInputCommand()) {
                 const command: CommandInterface = new CommandFactory().getCommand(interaction);
-                command.run();
+
+                const hasPermissions = await command.hasPermissions();
+                console.log(hasPermissions);
+                if (hasPermissions) {
+                    command.run();
+                }
             }
 
             if (interaction.isButton()) {
