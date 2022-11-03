@@ -205,6 +205,7 @@ export default class Lfg {
         if (game.discordRoleId === null || !apiGuild.roles.cache.has(game.discordRoleId)) {
             return apiGuild.roles.create({
                 name: game.name,
+                color: '#3498db',
             }).then(async role => {
                 game.discordRoleId = role.id;
 
