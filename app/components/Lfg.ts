@@ -161,14 +161,16 @@ export default class Lfg {
                     }
                 }
 
-                const hasRole = member.roles.cache.has(game.discordRoleId);
+                if (game.discordRoleId !== null) {
+                    const hasRole = member.roles.cache.has(game.discordRoleId);
 
-                if (addRoleToUser && !hasRole) {
-                    roleAddPromises.push(member.roles.add(game.discordRoleId));
-                }
+                    if (addRoleToUser && !hasRole) {
+                        roleAddPromises.push(member.roles.add(game.discordRoleId));
+                    }
 
-                if (!addRoleToUser && hasRole) {
-                    roleAddPromises.push(member.roles.remove(game.discordRoleId));
+                    if (!addRoleToUser && hasRole) {
+                        roleAddPromises.push(member.roles.remove(game.discordRoleId));
+                    }
                 }
             }
         }

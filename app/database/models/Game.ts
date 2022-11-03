@@ -8,7 +8,8 @@ const sequelize: Sequelize = new Sequelize({dialect: database.dialect, storage: 
 class Game extends Model {
     declare id: number;
     declare name: string;
-    declare discordRoleId: string;
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    declare discordRoleId: string | null;
     declare lastUsed: string | DateTime;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     declare UserGameSettings: UserGameSetting[];
@@ -16,7 +17,11 @@ class Game extends Model {
     declare GameAliases: Game[];
 
     mention(): string {
-        return `<@&${this.discordRoleId}>`;
+        if (this.discordRoleId !== null) {
+            return `<@&${this.discordRoleId}>`;
+        }
+
+        return this.name;
     }
 }
 

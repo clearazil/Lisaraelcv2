@@ -1,4 +1,4 @@
-import type {Client} from 'discord.js';
+import {PermissionFlagsBits} from 'discord.js';
 import {Events} from 'discord.js';
 import {REST, Routes} from 'discord.js';
 import config from '@config/general';
@@ -7,10 +7,13 @@ import CommandBuilder from './CommandBuilder';
 import CommandFactory from './CommandFactory';
 import type CommandInterface from './interfaces/CommandInterface';
 import Guild from '@database/models/Guild';
-import type {Guild as ApiGuild} from 'discord.js';
+import type {Guild as ApiGuild, Client, GuildMember} from 'discord.js';
 import ButtonResponseFactory from './ButtonResponseFactory';
-import type ButtonResponseInterface from './interfaces/ButtonResponseInterface';
 import PlayTimeSetter from './PlayTimeSetter';
+import {DateTime} from 'luxon';
+import Game from '@database/models/Game';
+import {Op} from 'sequelize';
+import {CronJob} from 'cron';
 
 /**
  *
@@ -31,6 +34,8 @@ export default class Bot {
             const results = [];
             for (const guild of this.client.guilds.cache.values()) {
                 results.push(Guild.createIfNotExists(guild.id, guild.name));
+
+                this.createCron(guild);
             }
 
             await Promise.all(results);
@@ -38,6 +43,8 @@ export default class Bot {
 
         this.client.on('guildCreate', async guild => {
             await Guild.createIfNotExists(guild.id, guild.name);
+
+            this.createCron(guild);
 
             await this.registerGuildCommands(guild);
         });
@@ -98,5 +105,83 @@ export default class Bot {
             }
         });
     }
-}
 
+    private createCron(apiGuild: ApiGuild) {
+        const cronJob = new CronJob(
+            '0 0 * * SAT',
+            () => {
+                void this.purge(apiGuild);
+            },
+            null,
+            false,
+            'Europe/Amsterdam',
+        );
+
+        cronJob.start();
+    }
+
+    private async purge(apiGuild: ApiGuild) {
+        const guild = await Guild.findOne({
+            where: {
+                discordGuildId: apiGuild.id,
+            },
+        });
+
+        if (guild === null) {
+            return;
+        }
+
+        console.log(`Starting role purge for ${guild.name}...`);
+
+        const date = DateTime.now().minus({days: 7});
+
+        const bot = await apiGuild.members.fetchMe();
+
+        const gameRoles = await Game.findAll({
+            where: {
+                guildId: guild.id,
+                lastUsed: {
+                    [Op.or]: {
+                        [Op.is]: null,
+                        [Op.lt]: date.toFormat('yyyy-MM-dd'),
+                    },
+                },
+                discordRoleId: {
+                    [Op.not]: null,
+                },
+            },
+        });
+
+        if (!bot.permissions.has(PermissionFlagsBits.ManageRoles)) {
+            console.log('Missing manage roles permission.');
+            return;
+        }
+
+        const rolePromises: Array<Promise<void>> = [];
+
+        for (const gameRole of gameRoles) {
+            rolePromises.push(this.removeRole(gameRole, apiGuild, bot));
+        }
+
+        await Promise.all(rolePromises);
+    }
+
+    private async removeRole(gameRole: Game, apiGuild: ApiGuild, bot: GuildMember) {
+        if (gameRole.discordRoleId !== null) {
+            const role = await apiGuild.roles.fetch(gameRole.discordRoleId);
+
+            if (role !== null && bot.roles.highest.comparePositionTo(role) < 1) {
+                console.log('Cannot remove role, insufficient permissions.');
+                return;
+            }
+
+            if (role !== null) {
+                await apiGuild.roles.delete(gameRole.discordRoleId);
+            }
+
+            gameRole.discordRoleId = null;
+
+            await gameRole.save();
+        }
+    }
+}
