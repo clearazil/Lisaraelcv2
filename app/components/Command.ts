@@ -28,13 +28,26 @@ export default class Command {
         let hasPermission = true;
 
         for (const [permission, permissionName] of this.command.requiredBotPermissions) {
-            if (permission === PermissionFlagsBits.SendMessages && !this.hasPermissionInChannel(bot, permission)) {
-                reply = {
-                    content: 'Cannot run command, I don\'t have permission to post messages in this channel.',
-                    ephemeral: true,
-                };
+            if (permission === PermissionFlagsBits.SendMessages) {
+                if (!this.hasPermissionInChannel(bot, permission)) {
+                    reply = {
+                        content: 'Cannot run command, I don\'t have permission to post messages in this channel.',
+                        ephemeral: true,
+                    };
 
-                hasPermission = false;
+                    hasPermission = false;
+                }
+            }
+
+            if (permission === PermissionFlagsBits.SendMessagesInThreads && this.interaction.channel?.isThread()) {
+                if (!this.hasPermissionInChannel(bot, permission)) {
+                    reply = {
+                        content: 'Cannot run command, I don\'t have permission to post messages in this thread.',
+                        ephemeral: true,
+                    };
+
+                    hasPermission = false;
+                }
             }
 
             if (!bot.permissions.has(permission)) {

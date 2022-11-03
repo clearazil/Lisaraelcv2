@@ -69,7 +69,6 @@ export default class Bot {
                 const command: CommandInterface = new CommandFactory().getCommand(interaction);
 
                 const hasPermissions = await command.hasPermissions();
-                console.log(hasPermissions);
                 if (hasPermissions) {
                     command.run();
                 }

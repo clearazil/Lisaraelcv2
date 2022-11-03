@@ -172,6 +172,7 @@ export default [
         requiredBotPermissions: new Map([
             [PermissionFlagsBits.ManageRoles, 'manage roles'],
             [PermissionFlagsBits.SendMessages, 'send messages'],
+            [PermissionFlagsBits.SendMessagesInThreads, 'send messages in threads'],
         ]),
         ephemeral: true,
         arguments: [
