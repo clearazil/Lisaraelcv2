@@ -134,9 +134,26 @@ export default class GameCommand extends Command implements CommandInterface {
         });
 
         if (game !== null) {
-            await game.destroy();
+            if (game.discordRoleId !== null) {
+                const role = await this.interaction.guild?.roles.fetch(game.discordRoleId);
 
-            // Need to destroy the attached role as well!
+                if (role !== null && role !== undefined) {
+                    const bot = this.interaction.guild?.members.me;
+
+                    if (bot === undefined || bot === null) {
+                        return false;
+                    }
+
+                    if (bot.roles.highest.comparePositionTo(role) < 1) {
+                        await this.interaction.reply({content: `${gameName} cannot be deleted. I do not have permission to delete the corresponding role.`, ephemeral: false});
+                        return;
+                    }
+
+                    await role.delete();
+                }
+            }
+
+            await game.destroy();
 
             await this.interaction.reply({content: `${gameName} has been deleted.`, ephemeral: this.command.ephemeral});
 

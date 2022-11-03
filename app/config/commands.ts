@@ -99,7 +99,10 @@ export default [
         name: 'remove-game',
         description: 'Remove a game.',
         requiredPermissions: PermissionFlagsBits.ManageChannels,
-        requiredBotPermissions: undefined,
+        requiredBotPermissions: new Map([
+            [PermissionFlagsBits.ManageRoles, 'manage roles'],
+            [PermissionFlagsBits.ManageGuild, 'manage server'],
+        ]),
         ephemeral: false,
         arguments: [
             {
