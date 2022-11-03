@@ -4,6 +4,7 @@ import GameCommand from './commands/GameCommand';
 import SettingCommand from './commands/SettingCommand';
 import commands from '@config/commands';
 import type Command from './types/Command';
+import GeneralCommand from './commands/GeneralCommand';
 
 // Interface which tells the common constructor
 type CommandInterfaceConstructor = new (interaction: ChatInputCommandInteraction, command: Command) => CommandInterface;
@@ -11,6 +12,7 @@ type CommandInterfaceConstructor = new (interaction: ChatInputCommandInteraction
 const defaultCommandMapping = new Map<string, CommandInterfaceConstructor>([
     ['SettingCommand', SettingCommand],
     ['GameCommand', GameCommand],
+    ['GeneralCommand', GeneralCommand],
 ]);
 
 export default class CommandFactory {

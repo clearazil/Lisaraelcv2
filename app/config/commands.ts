@@ -188,4 +188,14 @@ export default [
         ],
         classType: 'GameCommand',
     },
+    // General
+    {
+        name: 'help',
+        description: 'Show information about the bot.',
+        requiredPermissions: undefined,
+        requiredBotPermissions: undefined,
+        ephemeral: false,
+        arguments: [],
+        classType: 'GeneralCommand',
+    },
 ];
