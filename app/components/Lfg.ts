@@ -1,6 +1,6 @@
 import Game from '@database/models/Game';
 import Guild from '@database/models/Guild';
-import type {Collection, Guild as ApiGuild, GuildMember, WebhookEditMessageOptions} from 'discord.js';
+import type {Collection, Guild as ApiGuild, GuildMember, InteractionEditReplyOptions} from 'discord.js';
 import User from '@database/models/User';
 import type {ChatInputCommandInteraction} from 'discord.js';
 import {Op} from 'sequelize';
@@ -19,7 +19,7 @@ export default class Lfg {
         this.foundRolesInMessage = false;
     }
 
-    public async lfg(interaction: ChatInputCommandInteraction, message: string): Promise<WebhookEditMessageOptions | undefined> {
+    public async lfg(interaction: ChatInputCommandInteraction, message: string): Promise<InteractionEditReplyOptions | undefined> {
         this.foundRolesInMessage = false;
         let messageReply = message;
 

@@ -63,7 +63,7 @@ export default class SettingCommand extends Command implements CommandInterface 
         let messageReply = '**Time zone:**\n';
         let timeZoneMessage = 'You do not have a time zone set. Using the default time zone (CET).\n';
 
-        if (user.UserSetting?.timeZone !== null) {
+        if (user.UserSetting !== null && user.UserSetting?.timeZone !== null) {
             const difference = user.UserSetting.timeZoneDifference ?? '';
             const offset = user.UserSetting.timeZoneOffset ?? '';
             timeZoneMessage = `Your time zone is set as ${user.UserSetting.timeZone}${difference}${offset}.\n`;
